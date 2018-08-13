@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task creater</title>
+
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Create New Task</h1>
+
+    </div>
+
+    <div class="jumbotron">
+        <p><a href="http://localhost:8080/">Home page</a></p>
+        <p><a href="http://localhost:8080/list">View all tasks</a></p>
+    </div>
+
+    <div class="jumbotron">
+        <div class="form-group">
+            <label for="form_name">Name</label>
+            <input type="text" class="form-control" id="form_name" name="name">
+        </div>
+
+        <div class="form_date">
+            <label for="form_quan">Due Date</label>
+            <input type="text" class="form-control" id="form_date" name="date">
+        </div>
+
+        <div class="form-group">
+            <label for="form_desc">Description</label>
+            <input type="text" class="form-control" id="form_desc" name="desc">
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-primary" id="form_submit" onclick="addEntry()">
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+    function addEntry(){
+        let queryData = {   name : document.getElementById("form_name"),
+                            date : document.getElementById("form_date"),
+                            desc : document.getElementById("form_desc")};
+
+        let Httpreq = new XMLHttpRequest();
+        Httpreq.open("POST", "http://localhost:8080/data", true);
+        Httpreq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        Httpreq.onload = function()
+        {
+            let res = JSON.parse(Httpreq.responseText);
+            console.log(res);
+            if(res.success)
+            {
+                alert("New entry added successfully");
+                document.getElementById("form_name").value = "";
+                document.getElementById("form_date").value = "";
+                document.getElementById("form_desc").value = "";
+            }
+            else
+            {
+                alert("Failed to add entry! Contact tech support");
+            }
+        };
+        let qstring = Object.keys(queryData).map(key => key + '=' + queryData[key].value).join('&');
+        console.log(qstring);
+        Httpreq.send(qstring);
+    }
+
+</script>
+</body>
+</html>
