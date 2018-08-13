@@ -1,0 +1,25 @@
+{
+  "name": "web-todo",
+  "version": "1.0.0",
+  "description": "web-todo",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nxcleo/web-todo.git"
+  },
+  "author": "Aaron Jiang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nxcleo/web-todo/issues"
+  },
+  "homepage": "https://github.com/nxcleo/web-todo#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0"
+  }
+}
