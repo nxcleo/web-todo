@@ -33,9 +33,20 @@
         </div>
 
         <div class="form-group">
+            <label for="form_handle">Handler</label>
+            <input type="text" class="form-control" id="form_handle" name="atr">
+        </div>
+
+        <div class="form-group">
+            <label for="form_status">Status</label>
+            <input type="text" class="form-control" id="form_status" name="status">
+        </div>
+
+        <div class="form-group">
             <label for="form_desc">Description</label>
             <input type="text" class="form-control" id="form_desc" name="desc">
         </div>
+
 
         <div class="form-group">
             <input type="submit" value="Submit" class="btn btn-primary" id="form_submit" onclick="addEntry()">
@@ -50,6 +61,8 @@
     function addEntry(){
         let queryData = {   name : document.getElementById("form_name"),
                             date : document.getElementById("form_date"),
+                            handle : document.getElementById("form_handle"),
+                            status : document.getElementById("form_status"),
                             desc : document.getElementById("form_desc")};
 
         let Httpreq = new XMLHttpRequest();
@@ -61,10 +74,7 @@
             console.log(res);
             if(res.success)
             {
-                alert("New entry added successfully");
-                document.getElementById("form_name").value = "";
-                document.getElementById("form_date").value = "";
-                document.getElementById("form_desc").value = "";
+                window.location.replace(res.redirect);
             }
             else
             {

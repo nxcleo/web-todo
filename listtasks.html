@@ -26,6 +26,8 @@
                 <tr>
                     <th scope="col">Task Name</th>
                     <th scope="col">Due Date</th>
+                    <th scope="col">Handler</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Task Description</th>
                 </tr>
             </thead>
@@ -33,12 +35,17 @@
                 <% for (var i = 0; i < db.length; i++) {%>
                 <tr>
                     <td><%= db[i].name %></td>
-                    <td><%= db[i].date %></td>
+                    <td><%= db[i].date.toLocaleDateString("en-EN") %></td>
+                    <td><%= db[i].handle %></td>
+                    <td><%= db[i].status %></td>
                     <td><%= db[i].desc %></td>
+                    <td><button type="button" class="btn btn-primary btn-sm" onclick='window.location.replace("/change/<%= db[i]._id %>")'>Change</button></td>
+                    <td><button type="button" class="btn btn-danger btn-sm" onclick='window.location.replace("/removeitem/<%= db[i]._id %>")'>Remove</button></td>
                 </tr>
                 <% }%>
             </tbody>
         </table>
+
     </div>
 </div>
 

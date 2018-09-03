@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task creater</title>
+
+    <link rel="stylesheet" type="text/css" href="/bootstrap_custom.css">
+
+</head>
+<body class="custom-background">
+<div class="container">
+    <div class="page-header">
+        <h1>Create New Task    <img src="/head.png" style="max-width: 40%; float: right;"></h1>
+    </div>
+    <div>
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a href="/">Home</a></li>
+            <li role="presentation"><a href="/new">New Task</a></li>
+            <li role="presentation"><a href="/list">View Tasks</a></li>
+            <li role="presentation" class="active"><a href="/list">Change Tasks</a></li>
+        </ul>
+
+    </div>
+
+    <div class="jumbotron">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Task Name</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Handler</th>
+                <th scope="col">Status</th>
+                <th scope="col">Task Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><%= item.name %></td>
+                <td><%= item.date.toLocaleDateString("en-EN") %></td>
+                <td><%= item.handle %></td>
+                <td><%= item.status %></td>
+                <td><%= item.desc %></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <form action="/changedata/<%= item._id %>" method="POST">
+            <div class="form-group">
+                <label for="form_name">Name</label>
+                <input type="text" class="form-control" id="form_name" name="name">
+            </div>
+
+            <div class="form_date">
+                <label for="form_quan">Due Date</label>
+                <input type="text" class="form-control" id="form_date" name="date">
+            </div>
+
+            <div class="form-group">
+                <label for="form_handle">Handler</label>
+                <input type="text" class="form-control" id="form_handle" name="handle">
+            </div>
+
+            <div class="form-group">
+                <label for="form_status">Status</label>
+                <input type="text" class="form-control" id="form_status" name="status">
+            </div>
+
+            <div class="form-group">
+                <label for="form_desc">Description</label>
+                <input type="text" class="form-control" id="form_desc" name="desc">
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Change" class="btn btn-primary" id="form_submit">
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+
+</body>
+</html>

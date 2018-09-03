@@ -1,6 +1,7 @@
 const express = require('express');
 const bp = require('body-parser');
 const morgan = require('morgan');
+const mongodb = require('mongodb');
 
 const app = express();
 
@@ -9,42 +10,48 @@ app.set('view engine', 'html');
 app.use(bp.urlencoded({extended : true}));
 app.use(bp.json());
 app.use(morgan('common'));
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 
-class db {
-    constructor()
-    {
-        this.items = [];
-        this.addItem("Task 1", "7/9/2018", "do work");
-        this.addItem("Task 2", "8/9/2018", "get paid");
-        this.addItem("Task 3", "9/9/2018", "buy stuff");
-    };
 
-    get length()
-    {
-        return this.items.length;
-    };
+const MongoClient = mongodb.MongoClient;
 
-    get all()
-    {
-        return this.items
-    };
+const url = 'mongodb://localhost:27017/';
 
-    addItem(name, date, desc)
-    {
-        let newItem = {
-            name: name,
-            date: date,
-            desc: desc
-        };
-        this.items.push(newItem);
-        return true;
-    };
+MongoClient.connect(url, {useNewUrlParser: true}, function (err, client) {
+    if (err) {
+        console.log('Err  ', err);
+    } else {
+        console.log("Connected successfully to server");
+        db = client.db('todo');
+        db.collection('tasks').insertMany([
+            {
+                name: "Task 1",
+                date: new Date("9/7/2018"),
+                handle: "Conner",
+                status: "Complete",
+                desc: "do work"
+            },
+            {
+                name: "Task 2",
+                date: new Date("9/8/2018"),
+                handle: "Desmond",
+                status: "InProgress",
+                desc: "get paid"
+            },
+            {
+                name: "Task 3",
+                date: new Date("9/9/2018"),
+                handle: "Miles",
+                status: "InProgress",
+                desc: "buy stuff"
+            }
+        ]);
+    }
+});
 
-}
 
-const database = new db();
+
 
 
 app.get('/', function (req, res)
@@ -61,17 +68,62 @@ app.get('/new', function (req, res)
 
 app.get('/list', function (req, res)
 {
-    res.render(__dirname + '/listtasks.html', {db: database.all})
+    db.collection("tasks").find({}).toArray(function (err, result) {
+        res.render(__dirname + '/listtasks.html', {db: result});
+    });
+
+});
+
+app.get('/removeitem/:id', function (req, res) {
+    console.log(req.params.id);
+    db.collection("tasks").deleteOne({_id:new mongodb.ObjectID(req.params.id)}, function (err, obj) {
+        console.log(obj.result);
+        db.collection("tasks").find({}).toArray(function (err, result) {
+            res.render(__dirname + '/listtasks.html', {db: result});
+        });
+    })
 });
 
 
+app.get('/change/:id', function (req, res) {
+    let id = new mongodb.ObjectID(req.params.id)
+    db.collection("tasks").findOne({_id:id}, function (err, result) {
+        res.render(__dirname + '/changetask.html', {item: result});
+    });
+
+});
+
+app.post('/changedata/:id', function (req, res)
+{
+    let id = new mongodb.ObjectID(req.params.id)
+
+    db.collection("tasks").updateOne({_id: id}, { $set: {
+            name: req.body.name,
+            date: new Date(req.body.date),
+            handle: req.body.handle,
+            status: req.body.status,
+            desc: req.body.desc } }, function (err, obj) {
+        console.log(obj.result);
+        db.collection("tasks").find({}).toArray(function (err, result) {
+            res.render(__dirname + '/listtasks.html', {db: result});
+        });
+    })
+
+});
 
 app.post('/data', function (req, res)
 {
-    console.log()
-    console.log(req.body.name);
-    let success = database.addItem(req.body.name, req.body.date, req.body.desc);
-    res.json({success : success, redirect: "/list"});
+    console.log(req.body);
+    db.collection('tasks').insertOne({
+                name: req.body.name,
+                date: new Date(req.body.date),
+                handle: req.body.handle,
+                status: req.body.status,
+                desc: req.body.desc
+    },function (err, obj) {
+        res.json({success : true, redirect: "/list"});
+    });
+
 });
 
 
